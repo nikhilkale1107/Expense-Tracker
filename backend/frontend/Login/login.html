@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container mb-3">
+      <form onsubmit="register()">
+        <div >
+          <h3>Login</h3>
+          <p>Enter your Email and Password</p>
+        </div>
+        <div class="mb-2">
+          <label for="email" class="form-label">Email*</label>
+          <input id="email" class="form-control" type="email" placeholder="mail@loopple.com"/>
+        </div> 
+
+        <div class="mb-2"> 
+          <label for="password" class="form-label">Password*</label>
+          <input id="password" class="form-control" type="password" placeholder="Enter a password"/>
+        </div> 
+
+        <button type="submit" class="btn btn-success"> Login </button>
+
+        <p> Not registered yet? <a href="../Signup/signup.html" >SignUp.</a> </p>
+      </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+    <script src="./login.js"></script>
+  </body>
+</html>

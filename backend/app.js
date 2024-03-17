@@ -1,6 +1,7 @@
 const express = require("express");
 const sequelize = require("./utils/database");
 const ExpenseController = require("./controllers/expense");
+const UserController = require("./controllers/user");
 
 var app = express();
 
@@ -9,6 +10,10 @@ let cors = require("cors");
 app.use(cors());
 
 app.use(express.json());
+
+app.post("/api/register", UserController.registerUser);
+
+app.post("/api/login", UserController.loginUser);
 
 app.post("/api/expense", ExpenseController.postExpense);
 
