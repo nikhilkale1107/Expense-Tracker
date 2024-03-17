@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(result);
         if (result.status == 200) {
           displaySuccess("Logged In");
+          window.location.replace("http://127.0.0.1:5500/index.html");
         } else {
           const errorMessage = result.message;
           displayError(errorMessage);

@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
         axios
               .post("http://localhost:8001/api/expense", expense)
               .then(function (response) {
-                console.log(response);
+                displayExpenses();
               })
               .catch(function (error) {
                 console.log(error);
@@ -75,7 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
               );
             })
             .then((response) => {
-              console.log("DELETED");
               displayExpenses();
             })
             .catch(function (error) {
