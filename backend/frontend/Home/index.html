@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <title>Expense Tracker</title>
+  </head>
+  <body>
+    <div class="container mb-3">
+      <div>
+        <h2>Expense Tracker</h2>
+      </div>
+      <form id="expenseForm" >
+        <div class="mb-2">
+          <label for="amount" class="form-label">Amount:</label>
+          <input type="number" class="form-control" id="amount" required />
+        </div>
+        <div class="mb-2">
+          <label for="description"class="form-label">Description:</label>
+          <input type="text" class="form-control" id="description" required />
+        </div>
+        <div class="mb-2">
+          <label for="category" class="form-label">Category:</label>
+          <select class="form-control" id="category" required>
+            <option value="Furnitures">Furnitures</option>
+            <option value="rent">Rent</option>
+            <option value="entertainment">Entertainment</option>
+            <!-- Add more categories as needed -->
+          </select>
+        </div>
+        <div class="mb-2">
+          <button type="submit" class="btn btn-primary">Save Expense</button>
+        </div>
+      </form>
+
+      <div id="expenseList" class="mb-2">
+          <h3 class="mb-3">Expense List</h3>
+          <ul class="list-group" id="expenses">
+            <!-- Expense items will be added dynamically here -->
+          </ul>
+      </div>
+    </div>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+  <script src="index.js"></script>
+</html>
