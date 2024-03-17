@@ -16,8 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (result.status == 200) {
           displaySuccess("Logged In");
         } else {
-          //i have to show error in the form
-          const errorMessage = result.data.message; // Adjust based on your API's response
+          const errorMessage = result.message;
           displayError(errorMessage);
         }
       })
