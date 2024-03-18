@@ -16,7 +16,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (result.status == 200) {
             console.log(result.data);
             displaySuccess(result.data.message);
-            localStorage.setItem("token", result.data.token);
+            localStorage.setItem(
+              "token",
+              JSON.stringify({
+                token: result.data.token,
+                ispremium: result.data.data.ispremium,
+              })
+            );
           window.location.replace("http://127.0.0.1:5500/frontend/Home/index.html");
         } else {
           const errorMessage = result.message;

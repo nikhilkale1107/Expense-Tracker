@@ -1,6 +1,6 @@
 document.getElementById("buy-button").onclick = async function (e) {
   e.preventDefault();
-  let token = localStorage.getItem("token");
+  const token = JSON.parse(localStorage.getItem("token")).token;
   const result = await axios.post(
     "http://localhost:8001/payment/createOrder",
     null,
@@ -8,6 +8,7 @@ document.getElementById("buy-button").onclick = async function (e) {
       headers: { Authorization: token },
     }
   );
+
   var options = {
     key: result.data.key_id,
     order_id: result.data.order.id,
@@ -22,6 +23,18 @@ document.getElementById("buy-button").onclick = async function (e) {
         {
           headers: { Authorization: token },
         }
+      );
+
+      const premiumUser = document.getElementById("premiumUser");
+      const buyButton = document.getElementById("buy-button");
+      premiumUser.style.display = "block";
+      buyButton.style.display = "none";
+      localStorage.setItem(
+        "token",
+        JSON.stringify({
+          token: JSON.parse(localStorage.getItem("token")).token,
+          ispremium: true,
+        })
       );
       alert("You are premium User Now");
     },
@@ -45,23 +58,21 @@ document.getElementById("buy-button").onclick = async function (e) {
   razorpayObject.open();
 };
 
-function onPaymentSuccess(response) {
-  console.log(response);
-  axios.post(
-    "http://localhost:8001/payment/updateOrder",
-    {
-      order_id: res,
-    },
-    {
-      headers: { Authorization: token },
-    }
-  );
-}
-
 
 document.addEventListener("DOMContentLoaded", function () {
     const expenseForm = document.getElementById("expenseForm");
     const expensesList = document.getElementById("expenses");
+    const premiumUser = document.getElementById("premiumUser");
+  const buyButton = document.getElementById("buy-button");
+  const storedData = JSON.parse(localStorage.getItem("token"));
+
+  if (storedData.ispremium) {
+    premiumUser.style.display = "block";
+    buyButton.style.display = "none";
+  } else {
+    premiumUser.style.display = "none";
+    buyButton.style.display = "block";
+  }
 
     expenseForm.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -78,11 +89,9 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         // Save expense to local storage
-        let token = localStorage.getItem("token");
-
         axios
               .post("http://localhost:8001/expense", expense, {
-                headers: {Authorization: token},
+                headers: {Authorization: storedData.token},
               })
               .then(function (response) {
                 displayExpenses();
@@ -104,10 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Display expenses from local storage
     function displayExpenses() {
       expensesList.innerHTML = "";
-      var token = localStorage.getItem("token");
       axios
       .get("http://localhost:8001/expense", {
-        headers: { Authorization: token },
+        headers: { Authorization: storedData.token },
     })
       .then(function (response) {
         let expenses = response.data;
@@ -129,16 +137,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Delete expense
     window.deleteExpense = function (index) {
-      let token = localStorage.getItem("token");
       axios
             .get("http://localhost:8001/expense",{
-              headers: { Authorization: token },
+              headers: { Authorization: storedData.token },
             })
             .then(function (response) {
               let expense = response.data[index];
               return axios.delete(
                 "http://localhost:8001/expense/" + expense.id, {
-                  headers: { Authorization: token } ,
+                  headers: { Authorization: storedData.token } ,
             });
             })
             .then((response) => {
@@ -151,10 +158,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Edit expense
     window.editExpense = function (index) {
-      let token = localStorage.getItem("token");
       axios
       .get("http://localhost:8001/expense", {
-        headers: { Authorization: token },
+        headers: { Authorization: storedData.token },
       })
       .then(function (response) {
         let expense = response.data[index];
@@ -163,10 +169,9 @@ document.addEventListener("DOMContentLoaded", function () {
           expense.description;
         document.getElementById("category").value = expense.category;
 
-        let token = localStorage.getItem("token");
         return axios.delete(
           "http://localhost:8001/expense/" + expense.id, {
-            headers: { Authorization: token },
+            headers: { Authorization: storedData.token },
           }
         );
       })
