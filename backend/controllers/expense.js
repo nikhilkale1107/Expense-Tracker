@@ -1,12 +1,14 @@
 const Expense = require("../models/expense");
+const User = require("../models/user");
 
 exports.postExpense = (req, res) => {
-  console.log(req.body);
+//   console.log(req.body);
   const { amount, description, category } = req.body;
   Expense.create({
     amount,
     description,
     category,
+    userId: req.user.id,
   })
     .then((result) => {
       return res.send(result);
@@ -15,7 +17,8 @@ exports.postExpense = (req, res) => {
 };
 
 exports.getExpense = (req, res) => {
-  Expense.findAll()
+  console.log(req.user.id);
+  Expense.findAll({ where: { userId: req.user.id } })
     .then((result) => {
       return res.send(result);
     })
@@ -24,6 +27,7 @@ exports.getExpense = (req, res) => {
 
 exports.deleteExpense = (req, res) => {
   const { id } = req.params;
+  console.log("Deleting");
   Expense.destroy({ where: { id: id } })
     .then((result) => {
       console.log(result);

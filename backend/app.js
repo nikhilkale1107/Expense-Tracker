@@ -1,28 +1,36 @@
 const express = require("express");
 const sequelize = require("./utils/database");
-const ExpenseController = require("./controllers/expense");
-const UserController = require("./controllers/user");
+const cookieParser = require("cookie-parser");
 
 var app = express();
 
 const PORT = 8001;
 let cors = require("cors");
+require("dotenv").config();
+
+const userRouter = require("./routes/user");
+const expenseRouter = require("./routes/expense");
+const paymentRouter = require("./routes/payment");
+
+//Middlewares
 app.use(cors());
-
 app.use(express.json());
+app.use(cookieParser());
 
-app.post("/api/register", UserController.registerUser);
+//Routes
+app.use("/user", userRouter);
+app.use("/expense", expenseRouter);
+app.use("/payment", paymentRouter);
 
-app.post("/api/login", UserController.loginUser);
+const User = require("./models/user");
+const Expense = require("./models/expense");
 
-app.post("/api/expense", ExpenseController.postExpense);
-
-app.get("/api/expense", ExpenseController.getExpense);
-
-app.delete("/api/expense/:id", ExpenseController.deleteExpense);
+//Relations
+User.hasMany(Expense);
+Expense.belongsTo(User);
 
 sequelize
-  .sync()
+  .sync({ force: false })
   .then((result) => {
     app.listen(PORT, function () {
       console.log("Started application on port %d", PORT);

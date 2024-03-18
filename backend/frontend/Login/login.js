@@ -7,14 +7,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     axios
-      .post("http://localhost:8001/api/login", {
+      .post("http://localhost:8001/user/login", {
         email: email,
         password: password,
       })
       .then((result) => {
         console.log(result);
         if (result.status == 200) {
-          displaySuccess("Logged In");
+            console.log(result.data);
+            displaySuccess(result.data.message);
+            localStorage.setItem("token", result.data.token);
           window.location.replace("http://127.0.0.1:5500/index.html");
         } else {
           const errorMessage = result.message;

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const password = document.getElementById("password").value;
 
     axios
-      .post("http://localhost:8001/api/register", {
+      .post("http://localhost:8001/user/register", {
         name: name,
         email: email,
         password: password,

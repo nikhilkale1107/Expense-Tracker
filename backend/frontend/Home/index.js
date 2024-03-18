@@ -1,3 +1,85 @@
+var options = {
+  key: "rzp_test_K0whNMrJwMKo5j",
+  amount: "49900",
+  currency: "INR",
+  name: "Optimiz",
+  image:
+    "https://media.geeksforgeeks.org/wp-content/uploads/20210806114908/dummy-200x200.png",
+  order_id: "order_Nb8YPR8s5GXutQ",
+  handler: function (response) {
+    console.log(response);
+    alert("This step of Payment Succeeded");
+  },
+  prefill: {
+    //Here we are prefilling random contact
+    contact: "9876543210",
+    //name and email id, so while checkout
+    name: "Twinkle Sharma",
+    email: "smtwinkle@gmail.com",
+  },
+  notes: {
+    description: "Best Course for SDE placements",
+    language:
+      "Available in 4 major Languages JAVA, C/C++, Python, Javascript",
+    access: "This course have Lifetime Access",
+  },
+  theme: {
+    color: "#2300a3",
+  },
+};
+var razorpayObject = new Razorpay(options);
+console.log(razorpayObject);
+razorpayObject.on("payment.failed", function (response) {
+  console.log(response);
+  alert("This step of Payment Failed");
+});
+
+// document.getElementById("buy-button").onclick = function (e) {
+//   razorpayObject.open();
+//   e.preventDefault();
+// };
+
+
+document.getElementById("buy-button").onclick = function (e) {
+  axios
+    .post("http://localhost:8001/payment/createPayment", {
+      amount: 100,
+      currency: "INR",
+      receipt: "jqqoqhq",
+      notes: {},
+    })
+    .then((result) => {
+      console.log(result.data);
+      var options = {
+        key: "rzp_test_K0whNMrJwMKo5j",
+        amount: result.data.amount,
+        currency: result.data.currency,
+        name: "Optimiz",
+        image:
+          "https://media.geeksforgeeks.org/wp-content/uploads/20210806114908/dummy-200x200.png",
+        order_id: result.data.id,
+        handler: onPaymentSuccess,
+        notes: {},
+      };
+
+      var razorpayObject = new Razorpay(options);
+      razorpayObject.on("payment.failed", function (response) {
+        console.log(response);
+        alert("This step of Payment Failed");
+      });
+      razorpayObject.open();
+      e.preventDefault();
+    })
+    .catch((err) => console.log(err));
+};
+
+function onPaymentSuccess(response) {
+  console.log(response);
+  alert("This step of Payment Succeeded");
+}
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const expenseForm = document.getElementById("expenseForm");
     const expensesList = document.getElementById("expenses");
@@ -17,12 +99,10 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         // Save expense to local storage
-        let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-        expenses.push(expense);
-        localStorage.setItem("expenses", JSON.stringify(expenses));
+        let token = localStorage.getItem("token");
 
         axios
-              .post("http://localhost:8001/api/expense", expense)
+              .post("http://localhost:8001/expense", expense)
               .then(function (response) {
                 displayExpenses();
               })
@@ -43,9 +123,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Display expenses from local storage
     function displayExpenses() {
       expensesList.innerHTML = "";
-
+      var token = localStorage.getItem("token");
       axios
-      .get("http://localhost:8001/api/expense")
+      .get("http://localhost:8001/expense")
       .then(function (response) {
         let expenses = response.data;
         expenses.forEach(function (expense, index) {
@@ -66,12 +146,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Delete expense
     window.deleteExpense = function (index) {
+      let token = localStorage.getItem("token");
       axios
-            .get("http://localhost:8001/api/expense")
+            .get("http://localhost:8001/expense")
             .then(function (response) {
               let expense = response.data[index];
               return axios.delete(
-                "http://localhost:8001/api/expense/" + expense.id
+                "http://localhost:8001/expense/" + expense.id
               );
             })
             .then((response) => {
@@ -84,8 +165,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Edit expense
     window.editExpense = function (index) {
+      let token = localStorage.getItem("token");
       axios
-      .get("http://localhost:8001/api/expense")
+      .get("http://localhost:8001/expense")
       .then(function (response) {
         let expense = response.data[index];
         document.getElementById("amount").value = expense.amount;
@@ -93,11 +175,9 @@ document.addEventListener("DOMContentLoaded", function () {
           expense.description;
         document.getElementById("category").value = expense.category;
 
-        expenses.splice(index, 1);
-        localStorage.setItem("expenses", JSON.stringify(expenses));
-
+        let token = localStorage.getItem("token");
         return axios.delete(
-          "http://localhost:8001/api/expense/" + expense.id
+          "http://localhost:8001/expense/" + expense.id
         );
       })
       .then((response) => {
