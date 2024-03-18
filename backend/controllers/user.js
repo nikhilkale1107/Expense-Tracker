@@ -10,20 +10,18 @@ exports.registerUser = (req, res) => {
   const hashedPassword = bcryptjs.hashSync(password,salt);
   User.create({ name, email, password: hashedPassword})
     .then((result) => {
-        let id = result.dataValues.id;
-        console.log(id);
-        res.cookie("user_id", `${id}`);
         return res.send(result);
     })
     .catch((err) => res.send(err));
 };
 
-function generateToken(id, name) {
-  return jwt.sign({ id, name }, process.env.TOKEN_SECRET);
+function generateToken(id, name, premium) {
+  return jwt.sign({ id, name, premium }, process.env.TOKEN_SECRET);
   }
 
 exports.loginUser = (req, res) => {
   const { email, password } = req.body;
+  console.log(req.body);
   User.findOne({ where: { email: email } })
     .then((result) => {
         if (result == null) {
@@ -40,7 +38,7 @@ exports.loginUser = (req, res) => {
         success: true,
         message: "Login Success",
         data: result,
-        token: generateToken(result.dataValues.id, result.dataValues.name),
+        token: generateToken(result.dataValues.id, result.dataValues.name, result.dataValues.premium),
       });
     })
     .catch((err) => res.send(err));

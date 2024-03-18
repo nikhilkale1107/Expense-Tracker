@@ -15,7 +15,16 @@ document.addEventListener("DOMContentLoaded", function () {
         password: password,
       })
       .then((result) => {
-        console.log(result.data);
+        //redirect to login page
+        console.log(result);
+        if (result.status == 200) {
+          console.log(result.data);
+          localStorage.setItem("token", result.data.token);
+          window.location.replace("http://127.0.0.1:5500/index.html");
+        } else {
+          const errorMessage = result.message;
+          console.log(errorMessage);
+        }
       })
       .catch((err) => console.log(err));
   }

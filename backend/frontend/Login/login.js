@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(result.data);
             displaySuccess(result.data.message);
             localStorage.setItem("token", result.data.token);
-          window.location.replace("http://127.0.0.1:5500/index.html");
+          window.location.replace("http://127.0.0.1:5500/frontend/Home/index.html");
         } else {
           const errorMessage = result.message;
           displayError(errorMessage);

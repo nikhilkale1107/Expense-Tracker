@@ -8,7 +8,7 @@ exports.postExpense = (req, res) => {
     amount,
     description,
     category,
-    userId: req.user.id,
+    userId: req.user.dataValues.id,
   })
     .then((result) => {
       return res.send(result);
@@ -17,8 +17,7 @@ exports.postExpense = (req, res) => {
 };
 
 exports.getExpense = (req, res) => {
-  console.log(req.user.id);
-  Expense.findAll({ where: { userId: req.user.id } })
+  Expense.findAll({ where: { userId: req.user.dataValues.id } })
     .then((result) => {
       return res.send(result);
     })
@@ -27,7 +26,6 @@ exports.getExpense = (req, res) => {
 
 exports.deleteExpense = (req, res) => {
   const { id } = req.params;
-  console.log("Deleting");
   Expense.destroy({ where: { id: id } })
     .then((result) => {
       console.log(result);
