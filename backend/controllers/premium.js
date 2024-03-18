@@ -6,20 +6,9 @@ exports.showLeaderboard = async (req, res) => {
   console.log("Controller");
   try {
     const users = await User.findAll({
-      attributes: [
-        "id",
-        "name",
-        [sequelize.fn("sum", sequelize.col("expenses.amount")), "total_cost"],
-      ],
-      include: [
-        {
-          model: Expense,
-          attributes: [],
-        },
-      ],
-      group: ["user.id"],
-      order: [["total_cost", "DESC"]],
-    });
+        attributes: ["name", "total_expense"],
+        order: [["total_expense", "DESC"]],
+      });
     console.log(users);
     res.status(201).json(users);
   } catch (error) {

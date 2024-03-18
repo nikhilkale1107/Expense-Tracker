@@ -77,7 +77,7 @@ function showPremiumUser() {
         const premiumList = document.getElementsByClassName("list-premium")[0];
         response.data.forEach((data) => {
           const li = document.createElement("li");
-          li.innerHTML = `Name ${data.name} : Total Expense ${data.total_cost}`;
+          li.innerHTML = `Name ${data.name} : Total Expense ${data.total_expense}`;
           premiumList.appendChild(li);
         });
       })

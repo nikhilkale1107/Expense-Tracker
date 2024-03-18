@@ -1,27 +1,35 @@
 const Expense = require("../models/expense");
 const User = require("../models/user");
 
-exports.postExpense = (req, res) => {
-//   console.log(req.body);
+exports.postExpense = async  (req, res) => {
   const { amount, description, category } = req.body;
-  Expense.create({
-    amount,
-    description,
-    category,
-    userId: req.user.dataValues.id,
-  })
-    .then((result) => {
-      return res.send(result);
-    })
-    .catch((err) => console.log(err));
+  try {
+    const expenseAmount = parseFloat(amount);
+
+    const expense = await req.user.createExpense({
+      amount: expenseAmount,
+      description,
+      category,
+    });
+
+    await req.user.update({
+      total_expense:
+        parseFloat(req.user.dataValues.total_expense) + expenseAmount,
+    });
+
+    res.status(201).json(expense);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-exports.getExpense = (req, res) => {
-  Expense.findAll({ where: { userId: req.user.dataValues.id } })
-    .then((result) => {
-      return res.send(result);
-    })
-    .catch((err) => console.log(err));
+exports.getExpense = async (req, res) => {
+  try {
+    const expenses = await req.user.getExpenses();
+    res.status(201).json(expenses);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.deleteExpense = (req, res) => {

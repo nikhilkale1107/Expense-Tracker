@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (result.status == 200) {
           console.log(result.data);
           localStorage.setItem("token", result.data.token);
-          window.location.replace("http://127.0.0.1:5500/index.html");
+          window.location.replace("http://127.0.0.1:5500/frontend/Login/login.html");
         } else {
           const errorMessage = result.message;
           console.log(errorMessage);
