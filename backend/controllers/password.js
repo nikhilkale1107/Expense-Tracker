@@ -29,8 +29,8 @@ exports.sendOTP = async (req, res) => {
       sender,
       to: [
         {
-          email: "sumitpandeyjnv@gmail.com",
-          name: "Sumit Pandey",
+          email: email,
+          name: "Nikhil Kale",
         },
       ],
       subject: "OTP Verification",
