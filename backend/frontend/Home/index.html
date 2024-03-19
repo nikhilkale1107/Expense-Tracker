@@ -40,7 +40,15 @@
       </form>
 
       <div id="expenseList" class="mb-2">
+        <div>
           <h3 class="mb-3">Expense List</h3>
+          <select name="paginationCount" id="paginationCount">
+            <option value="2">2</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="50">50</option>
+          </select>
+        </div>
           <ul class="list-group" id="expenses">
             <!-- Expense items will be added dynamically here -->
           </ul>
