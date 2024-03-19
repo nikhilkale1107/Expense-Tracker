@@ -4,9 +4,7 @@ const router = express.Router();
 
 const passwordController = require("../controllers/password");
 
-//Middleware
-const Auth = require("../middleware/auth");
-
 router.post("/forgotpassword", passwordController.sendOTP);
+router.post("/resetpassword/:id", passwordController.resetPassword);
 
 module.exports = router;
