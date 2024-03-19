@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 headers: {Authorization: storedData.token},
               })
               .then(function (response) {
-                displayExpenses();
+                displayExpenses(1);
               })
               .catch(function (error) {
                 console.log(error);
@@ -126,22 +126,48 @@ document.addEventListener("DOMContentLoaded", function () {
         expenseForm.reset();
 
         // Display expenses
-        displayExpenses();
+        displayExpenses(1);
       } else {
         alert("Please fill in all fields.");
       }
     });
 
     // Display expenses from local storage
-    function displayExpenses() {
+    function displayExpenses(page) {
       expensesList.innerHTML = "";
+      const pagenationDiv = document.getElementById("paginationDiv");
+      pagenationDiv.innerHTML = "";
       axios
-      .get("http://localhost:8001/expense", {
+      .get("http://localhost:8001/expense?page=" + page, {
         headers: { Authorization: storedData.token },
     })
       .then(function (response) {
-        let expenses = response.data;
-        expenses.forEach(function (expense, index) {
+          let data = response.data;
+
+          if (data.hasPreviousPage) {
+            const button = document.createElement("button");
+            button.textContent = data.previousPage;
+            button.className = "m-1";
+            button.onclick = function () {
+              displayExpenses(data.previousPage);
+            };
+            pagenationDiv.appendChild(button);
+          }
+          const button = document.createElement("button");
+          button.textContent = data.currentPage;
+          button.className = "m-1 bg-warning";
+          pagenationDiv.appendChild(button);
+  
+          if (data.hasNextPage) {
+            const button = document.createElement("button");
+            button.textContent = data.nextPage;
+            button.className = "m-1";
+            button.onclick = function () {
+              displayExpenses(data.nextPage);
+            };
+            pagenationDiv.appendChild(button);
+          }
+          data.expenses.forEach(function (expense, index) {
           const li = document.createElement("li");
           li.className = "list-group-item";
           li.innerHTML = `
@@ -171,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             })
             .then((response) => {
-              displayExpenses();
+              displayExpenses(1);
             })
             .catch(function (error) {
               console.log(error);
@@ -206,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     // Initial display
-    displayExpenses();
+    displayExpenses(1);
   });
 
   document.getElementById("btnDownload").onclick = async function (e) {
