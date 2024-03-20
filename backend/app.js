@@ -1,6 +1,10 @@
 const express = require("express");
+const fs = require("fs");
+const path = require("path");
 const sequelize = require("./utils/database");
 const cookieParser = require("cookie-parser");
+const helmet = require("helmet");
+const morgan = require("morgan");
 
 var app = express();
 
@@ -14,10 +18,20 @@ const paymentRouter = require("./routes/payment");
 const premiumRouter = require("./routes/premium");
 const passwordRouter = require("./routes/password");
 
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  {
+    flags: "a",
+  }
+);
+
 //Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(helmet());
+// app.use(morgan("common", { stream: accessLogStream }));
 
 //Routes
 app.use("/user", userRouter);
